@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
+
 import lombok.Getter;
 import wanted.onboarding.company.entity.Company;
 import wanted.onboarding.jobposting.dto.JobPostingPostDto;
@@ -27,11 +29,19 @@ public class JobPosting {
 	protected JobPosting() {
 	}
 
+	private JobPosting(Long jobPostingId) {
+		this.jobPostingId = jobPostingId;
+	}
+
 	private JobPosting(String position, int compensation, String jobDescription, String requiredSkills) {
 		this.position = position;
 		this.compensation = compensation;
 		this.jobDescription = jobDescription;
 		this.requiredSkills = requiredSkills;
+	}
+
+	public static JobPosting from(long jobPostingId) {
+		return new JobPosting(jobPostingId);
 	}
 
 	public static JobPosting from(JobPostingPostDto jobPostingPostDto) {
