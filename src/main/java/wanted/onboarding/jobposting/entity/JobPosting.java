@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.batch.BatchProperties;
 
 import lombok.Getter;
 import wanted.onboarding.company.entity.Company;
+import wanted.onboarding.jobposting.dto.JobPostingPatchDto;
 import wanted.onboarding.jobposting.dto.JobPostingPostDto;
 
 @Entity
@@ -50,6 +51,13 @@ public class JobPosting {
 			jobPostingPostDto.getCompensation(),
 			jobPostingPostDto.getJobDescription(),
 			jobPostingPostDto.getRequiredSkills());
+	}
+
+	public void updateDataFrom(JobPostingPatchDto jobPostingPatchDto) {
+		this.position = jobPostingPatchDto.getPosition();
+		this.compensation = jobPostingPatchDto.getCompensation();
+		this.jobDescription = jobPostingPatchDto.getJobDescription();
+		this.requiredSkills = jobPostingPatchDto.getRequiredSkills();
 	}
 
 	public Long getJobPostingId() {
