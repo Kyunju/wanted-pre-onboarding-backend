@@ -7,4 +7,5 @@ import wanted.onboarding.jobposting.entity.JobPosting;
 public interface JobPostingService {
 	public JobPosting createJobPosting(JobPostingPostDto jobPostingPostDto);
 	public JobPosting updateJobPosting(JobPostingPatchDto jobPostingPatchDto, Long jobPostingId);
+	public void deleteJobPosting(Long jobPostingId);
 }

@@ -37,6 +37,11 @@ public class JobPostingServiceImpl implements JobPostingService {
 		return jobPostingRepository.save(jobPosting);
 	}
 
+	@Override
+	public void deleteJobPosting(Long jobPostingId) {
+		jobPostingRepository.deleteById(jobPostingId);
+	}
+
 	private JobPosting findVerifiedJoPostingById(Long jobPostingId) {
 		Optional<JobPosting> jobPosting = jobPostingRepository.findById(jobPostingId);
 		return jobPosting.orElseThrow();
