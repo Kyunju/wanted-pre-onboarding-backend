@@ -1,20 +1,15 @@
 package wanted.onboarding;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import wanted.onboarding.jobposting.controller.JobPostingController;
 import wanted.onboarding.jobposting.dto.JobPostingPatchDto;
@@ -24,6 +19,7 @@ import wanted.onboarding.jobposting.service.JobPostingService;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -96,7 +92,8 @@ public class JobPostingControllerTest {
 		JobPosting jobPosting = JobPosting.from(jobPostingPostDto);
 		jobPosting.setJobPostingId(jobPostingId);
 		jobPosting.updateDataFrom(jobPostingPatchDto);
-		given(jobPostingService.updateJobPosting(Mockito.any(JobPostingPatchDto.class), Mockito.anyLong())).willReturn(jobPosting);
+		given(jobPostingService.updateJobPosting(Mockito.any(JobPostingPatchDto.class), Mockito.anyLong())).willReturn(
+			jobPosting);
 		String requestBody = gson.toJson(jobPostingPatchDto);
 
 		//when
@@ -112,5 +109,19 @@ public class JobPostingControllerTest {
 		actions.andExpect(status().isOk())
 			.andExpect(jsonPath("jobDescription").value(jobPostingPatchDto.getJobDescription()))
 			.andExpect(jsonPath("compensation").value(jobPostingPatchDto.getCompensation()));
+	}
+
+	@Test
+	@DisplayName("[API][DELETE]채용공고 삭제 테스트")
+	void jobPostingDelete() throws Exception {
+		//given
+		Long jobPostingId = 1L;
+		doNothing().when(jobPostingService).deleteJobPosting(jobPostingId);
+
+		//when, then
+		mockMvc.perform(
+				delete("/jobs/{jobPosting-id}", jobPostingId)
+					.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNoContent());
 	}
 }

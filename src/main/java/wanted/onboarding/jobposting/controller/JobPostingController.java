@@ -28,7 +28,7 @@ public class JobPostingController {
 	}
 
 	@PostMapping
-	public ResponseEntity postJobPosting(@RequestBody JobPostingPostDto jobPostingPostDto){
+	public ResponseEntity postJobPosting(@RequestBody JobPostingPostDto jobPostingPostDto) {
 		JobPosting jobPosting = jobPostingService.createJobPosting(jobPostingPostDto);
 		URI uri = UriComponentsBuilder.newInstance().path("/jobs/" + jobPosting.getJobPostingId()).build().toUri();
 		return ResponseEntity.created(uri).build();
