@@ -64,7 +64,31 @@ public class JobPosting {
 		return jobPostingId;
 	}
 
+	public void setJobPostingId(Long jobPostingId) {
+		this.jobPostingId = jobPostingId;
+	}
+
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public int getCompensation() {
+		return compensation;
+	}
+
+	public String getJobDescription() {
+		return jobDescription;
+	}
+
+	public String getRequiredSkills() {
+		return requiredSkills;
+	}
+
+	public Company getCompany() {
+		return company;
 	}
 }

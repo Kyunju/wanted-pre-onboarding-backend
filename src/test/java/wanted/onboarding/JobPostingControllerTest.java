@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import wanted.onboarding.jobposting.controller.JobPostingController;
+import wanted.onboarding.jobposting.dto.JobPostingPatchDto;
 import wanted.onboarding.jobposting.dto.JobPostingPostDto;
 import wanted.onboarding.jobposting.entity.JobPosting;
 import wanted.onboarding.jobposting.service.JobPostingService;
@@ -70,5 +71,46 @@ public class JobPostingControllerTest {
 		actions
 			.andExpect(status().isCreated())
 			.andExpect(header().string("Location", is("/jobs/" + jobPostingId)));
+	}
+
+	@Test
+	@DisplayName("[API][PATCH] 채용공고 수정 테스트")
+	void jobPostingPatch() throws Exception {
+		//given
+		Long jobPostingId = 1L;
+		JobPostingPostDto jobPostingPostDto =
+			JobPostingPostDto.builder()
+				.companyId(1L)
+				.position("주니어 Java 개발자")
+				.jobDescription("Java 개발자 구인합니다")
+				.compensation(300000)
+				.requiredSkills("JAVA, Spring")
+				.build();
+		JobPostingPatchDto jobPostingPatchDto =
+			JobPostingPatchDto.builder()
+				.position("주니어 Java 개발자")
+				.jobDescription("수정")
+				.compensation(300)
+				.requiredSkills("JAVA, Spring")
+				.build();
+		JobPosting jobPosting = JobPosting.from(jobPostingPostDto);
+		jobPosting.setJobPostingId(jobPostingId);
+		jobPosting.updateDataFrom(jobPostingPatchDto);
+		given(jobPostingService.updateJobPosting(Mockito.any(JobPostingPatchDto.class), Mockito.anyLong())).willReturn(jobPosting);
+		String requestBody = gson.toJson(jobPostingPatchDto);
+
+		//when
+		ResultActions actions =
+			mockMvc.perform(
+				patch("/jobs/{jobPosting-id}", jobPostingId)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(requestBody)
+					.accept(MediaType.APPLICATION_JSON)
+			);
+
+		//then
+		actions.andExpect(status().isOk())
+			.andExpect(jsonPath("jobDescription").value(jobPostingPatchDto.getJobDescription()))
+			.andExpect(jsonPath("compensation").value(jobPostingPatchDto.getCompensation()));
 	}
 }
