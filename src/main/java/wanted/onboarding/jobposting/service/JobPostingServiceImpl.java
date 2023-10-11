@@ -1,11 +1,13 @@
 package wanted.onboarding.jobposting.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import wanted.onboarding.company.entity.Company;
 import wanted.onboarding.company.service.CompanyService;
+import wanted.onboarding.jobposting.dto.JobPostingMultiResponseDto;
 import wanted.onboarding.jobposting.dto.JobPostingPatchDto;
 import wanted.onboarding.jobposting.dto.JobPostingPostDto;
 import wanted.onboarding.jobposting.entity.JobPosting;
@@ -40,6 +42,12 @@ public class JobPostingServiceImpl implements JobPostingService {
 	@Override
 	public void deleteJobPosting(Long jobPostingId) {
 		jobPostingRepository.deleteById(jobPostingId);
+	}
+
+	@Override
+	public List<JobPostingMultiResponseDto> findAllJobPostings() {
+		List<JobPosting> jobPostings = jobPostingRepository.findAll();
+		return JobPostingMultiResponseDto.createResponseDtoList(jobPostings);
 	}
 
 	private JobPosting findVerifiedJoPostingById(Long jobPostingId) {
